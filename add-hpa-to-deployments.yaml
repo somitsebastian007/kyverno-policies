@@ -23,8 +23,8 @@ spec:
       generate:
         apiVersion: autoscaling/v2
         kind: HorizontalPodAutoscaler
-        metadata:
-          name: "{{request.object.metadata.name}}-hpa"
+        name: "{{request.object.metadata.name}}-hpa"
+        synchronize: true
         namespace: "{{request.object.metadata.namespace}}"
         data:
           spec:
