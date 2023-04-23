@@ -1,3 +1,4 @@
+---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
@@ -8,28 +9,27 @@ metadata:
     policies.kyverno.io/severity: medium
     policies.kyverno.io/subject: Pod
     policies.kyverno.io/minversion: 1.6.0
-    policies.kyverno.io/description: >-
-      Add HPA.
+    policies.kyverno.io/description: Add HPA.
 spec:
   rules:
-  - name: generate-hpa-on-deployment-creation
-    match:
-      any:
-      - resources:
-          kinds:
-          - Deployment
-    generate:
-      apiVersion: autoscaling/v2
-      kind: HorizontalPodAutoscaler
-      metadata:
-        name: "{{request.object.metadata.name}}-hpa"
-      synchronize: true
-      namespace: "{{request.object.metadata.namespace}}"
-      spec:
-        scaleTargetRef:
-          apiVersion: apps/v1
-          kind: Deployment
-          name: "{{request.object.metadata.name}}"
-        minReplicas: 1
-        maxReplicas: 5
-        targetCPUUtilizationPercentage: 50
+    - name: generate-hpa-on-deployment-creation
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+      generate:
+        apiVersion: autoscaling/v2
+        kind: HorizontalPodAutoscaler
+        metadata:
+          name: "{{request.object.metadata.name}}-hpa"
+        synchronize: true
+        namespace: "{{request.object.metadata.namespace}}"
+        spec:
+          scaleTargetRef:
+            apiVersion: apps/v1
+            kind: Deployment
+            name: "{{request.object.metadata.name}}"
+          minReplicas: 1
+          maxReplicas: 5
+          targetCPUUtilizationPercentage: 50
