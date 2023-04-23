@@ -15,13 +15,15 @@ spec:
   rules:
   - name: generate-hpa-on-deployment-creation
     match:
-      resources:
-        kinds:
-        - Deployment
+      any:
+      - resources:
+          kinds:
+          - Deployment
     generate:
       apiVersion: autoscaling/v2
       kind: HorizontalPodAutoscaler
-      name: "{{request.object.metadata.name}}-hpa"
+      metadata:
+        name: "{{request.object.metadata.name}}-hpa"
       namespace: "{{request.object.metadata.namespace}}"
       spec:
         scaleTargetRef:
