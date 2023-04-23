@@ -1,27 +1,26 @@
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: add-hpa-to-deployment
+  name: generate-hpa-on-deployment-creation
 spec:
-  background: false
+  background: true
   rules:
-  - name: add-hpa-to-deployment
+  - name: generate-hpa-on-deployment-creation
     match:
       resources:
         kinds:
         - Deployment
-    mutate:
-      patchStrategicMerge:
-        metadata:
-          annotations:
-            autoscaling.alpha.kubernetes.io/conditions: '[]'
-            autoscaling.alpha.kubernetes.io/current-metrics: '[]'
-            autoscaling.alpha.kubernetes.io/metrics: '[{"type":"Resource","resource":{"name":"cpu","target":{"averageUtilization":50,"type":"Utilization"}}}]'
-        spec:
-          scaleTargetRef:
-            apiVersion: apps/v1
-            kind: Deployment
-            name: '{{name}}'
-          minReplicas: 1
-          maxReplicas: 10
-          targetCPUUtilizationPercentage: 50
+    generate:
+      kind: HorizontalPodAutoscaler
+      name: "{{request.object.metadata.name}}-hpa"
+      namespace: "{{request.object.metadata.namespace}}"
+      annotations:
+        generated-by: "kyverno"
+      spec:
+        scaleTargetRef:
+          apiVersion: apps/v1
+          kind: Deployment
+          name: "{{request.object.metadata.name}}"
+        minReplicas: 1
+        maxReplicas: 5
+        targetCPUUtilizationPercentage: 50
