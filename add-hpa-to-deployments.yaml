@@ -7,7 +7,7 @@ metadata:
     policies.kyverno.io/title: Require HPA on Deployment
     policies.kyverno.io/category: Best Practices
     policies.kyverno.io/severity: medium
-    policies.kyverno.io/subject: Deployment
+    policies.kyverno.io/subject: HPA
     policies.kyverno.io/minversion: 1.6.0
     policies.kyverno.io/description: >-
       HorizontalPodAutoscaler is a Kubernetes resource that automatically scales the number of pods in a 
@@ -24,7 +24,6 @@ spec:
         apiVersion: autoscaling/v2
         kind: HorizontalPodAutoscaler
         name: "{{request.object.metadata.name}}-hpa"
-        synchronize: true
         namespace: "{{request.object.metadata.namespace}}"
         data:
           spec:
