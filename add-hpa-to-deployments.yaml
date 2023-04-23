@@ -11,6 +11,7 @@ spec:
         kinds:
         - Deployment
     generate:
+      apiVersion: autoscaling/v2
       kind: HorizontalPodAutoscaler
       name: "{{request.object.metadata.name}}-hpa"
       namespace: "{{request.object.metadata.namespace}}"
