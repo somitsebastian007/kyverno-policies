@@ -16,8 +16,8 @@ metadata:
       This policy validates that all containers have something specified for memory and CPU
       requests and memory limits.      
 spec:
-  validationFailureAction: audit
-  background: true
+  validationFailureAction: Audit
+  background: false
   rules:
   - name: validate-resources
     match:
@@ -53,8 +53,8 @@ metadata:
       all tools can understand. The recommended labels describe applications in a way that can be
       queried. This policy validates that the label `app.kubernetes.io/name` is specified with some value.      
 spec:
-  validationFailureAction: enforce
-  background: true
+  background: false
+  validationFailureAction: Enforce
   rules:
   - name: check-for-labels
     match:
