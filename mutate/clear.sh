@@ -1,0 +1,1 @@
+kubectl delete deploy my-deploy-3
